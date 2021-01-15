@@ -1,0 +1,6 @@
+name: tv-series-notifier
+description: Announces the release of new episodes of the series
+
+runs:
+    using: node12
+    main: ./index.js

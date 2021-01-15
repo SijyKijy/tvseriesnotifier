@@ -1,0 +1,17 @@
+name: tvseriesnotifier
+on:
+    schedule:
+        - cron: '0 1 * * *' # At 01:00
+    push:
+        branches: main
+jobs:
+    notifier:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - run: npm install
+            - name: Update
+              uses: ./
+              env:
+                  TVTIME_TOKEN: ${{ secrets.TVTIME_TOKEN }}
+                  WEBHOOK_PATH: ${{ secrets.WEBHOOK_PATH }}
