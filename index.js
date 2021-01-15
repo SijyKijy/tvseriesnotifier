@@ -13,17 +13,16 @@ let options = {
 https.get(options, function (res) {
     let body = '';
 
-    // Получаем куски данных
     res.on('data', function (data) {
         body += data;
     });
 
-    // Когда ответ получает
     res.on('end', function () {
-        Notify(JSON.parse(body).episodes);
+        let episodes = JSON.parse(body).episodes;
+        if (episodes.length == 0) return;
+        Notify(episodes);
     });
 
-    // Если ошибка
     res.on('error', function (e) {
         console.log('Error: ' + e.message);
     });
