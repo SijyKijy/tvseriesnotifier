@@ -92,6 +92,8 @@ function PostToDiscordWebHook(content) {
 
 function FilterEpisodes(episodes) {
     let nowDate = FormatDate(Date.now());
+    console.log(nowDate);
+
     let todayEpisodes = [];
 
     episodes.forEach((e) => {
