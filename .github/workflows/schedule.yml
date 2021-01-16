@@ -1,7 +1,7 @@
 name: tv-series-notifier
 on:
     schedule:
-        - cron: '00 08 * * *' # At 08:00
+        - cron: '00 04 * * *' # ~8:00 MSK (+04)
     push:
         branches: main
 jobs:
