@@ -4,7 +4,7 @@ const { TVTIME_TOKEN: tvtimeToken, WEBHOOK_PATH: webhookPath } = process.env;
 
 let options = {
     host: 'api.tvtime.com',
-    path: '/v1/agenda?limit=100',
+    path: '/v1/agenda?limit=128',
     headers: {
         Authorization: `Basic ${tvtimeToken}`,
     },
