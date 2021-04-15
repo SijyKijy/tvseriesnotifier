@@ -1,12 +1,12 @@
 const https = require('https');
 
-const { TVTIME_TOKEN: tvtimeToken, WEBHOOK_PATH: webhookPath } = process.env;
-
-let options = {
-    host: 'api.tvtime.com',
-    path: '/v1/agenda?limit=128',
+const { TVTIME_COOKIE: tvtimeCookie, WEBHOOK_PATH: webhookPath } = process.env;
+const nowDate = FormatDate(Date.now());
+const options = {
+    host: 'www.tvtime.com',
+    path: `/calendar/data?start_date=${nowDate}&mode=my-shows`,
     headers: {
-        Authorization: `Basic ${tvtimeToken}`,
+        Cookie: tvtimeCookie,
     },
 };
 
@@ -18,7 +18,7 @@ https.get(options, function (res) {
     });
 
     res.on('end', function () {
-        let episodes = JSON.parse(body).episodes;
+        let episodes = JSON.parse(body);
         if (episodes.length == 0) return;
         Notify(episodes);
     });
@@ -37,7 +37,7 @@ function Notify(episodes) {
 
         for (value of filtered[key]) {
             fields.push({
-                name: `Episode: "${value.name}" (${value.season_number}x${value.number})`,
+                name: `Episode: "${value.name}" (Episode: ${value.season_number} Season: ${value.number})`,
                 value: `Show time: **${value.air_time}**`,
                 inline: false,
             });
@@ -91,7 +91,6 @@ function PostToDiscordWebHook(content) {
 }
 
 function FilterEpisodes(episodes) {
-    let nowDate = FormatDate(Date.now());
     console.log(nowDate);
 
     let todayEpisodes = [];
