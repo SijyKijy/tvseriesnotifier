@@ -24,7 +24,7 @@ https.get(options, function (res) {
     });
 
     res.on('error', function (e) {
-        console.log('Error: ' + e.message);
+        throw new Error(e.message);
     });
 });
 
@@ -76,14 +76,9 @@ function PostToDiscordWebHook(content) {
         },
     };
 
-    var req = https.request(options, (res) => {
-        res.on('data', (d) => {
-            process.stdout.write(d);
-        });
-    });
-
+    var req = https.request(options);
     req.on('error', (e) => {
-        console.error(e);
+        throw new Error(e.message);
     });
 
     req.write(content);

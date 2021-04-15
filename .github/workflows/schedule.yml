@@ -10,7 +10,7 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - run: npm install
-            - name: Update
+            - name: Notify
               uses: ./
               env:
                   TVTIME_COOKIE: ${{ secrets.TVTIME_COOKIE }}
