@@ -24,7 +24,7 @@ https.get(options, function (res) {
     });
 
     res.on('error', function (e) {
-        throw new Error(e.message);
+        throw new Error(`Tvtime error: ${e.message}`);
     });
 });
 
@@ -76,9 +76,14 @@ function PostToDiscordWebHook(content) {
         },
     };
 
-    var req = https.request(options);
+    var req = https.request(options, (res) => {
+        res.on('data', (d) => {
+            process.stdout.write(d);
+        });
+    });
+
     req.on('error', (e) => {
-        throw new Error(e.message);
+        throw new Error(`Discord error: ${e.message}`);
     });
 
     req.write(content);
