@@ -13,5 +13,5 @@ jobs:
             - name: Update
               uses: ./
               env:
-                  TVTIME_TOKEN: ${{ secrets.TVTIME_TOKEN }}
+                  TVTIME_COOKIE: ${{ secrets.TVTIME_COOKIE }}
                   WEBHOOK_PATH: ${{ secrets.WEBHOOK_PATH }}
