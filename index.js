@@ -37,7 +37,7 @@ function Notify(episodes) {
 
         for (value of filtered[key]) {
             fields.push({
-                name: `Episode: "${value.name}" (Episode: ${value.season_number} Season: ${value.number})`,
+                name: `Episode: "${value.name}" (Episode: ${value.number} Season: ${value.season_number})`,
                 value: `Show time: **${value.air_time}**`,
                 inline: false,
             });
