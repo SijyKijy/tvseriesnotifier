@@ -1,0 +1,6 @@
+name: movie-notifier
+description: Announces the release of new movies
+
+runs:
+    using: node12
+    main: ./index.js
