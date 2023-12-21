@@ -3,10 +3,10 @@ const https = require('https');
 const { TVTIME_COOKIE: tvtimeCookie, WEBHOOK_PATH: webhookPath } = process.env;
 const nowDate = FormatDate(Date.now());
 const options = {
-    host: 'www.tvtime.com',
-    path: `/calendar/data?start_date=${nowDate}&mode=my-shows`,
+    host: 'beta-app.tvtime.com',
+    path: `/sidecar?o=https%3A%2F%2Fapi2.tozelabs.com%2Fv2%2Fuser%2F34490022%2Ftocome&offset=0&include_watched=1`,
     headers: {
-        Cookie: tvtimeCookie,
+        Authorization: `Bearer ${tvtimeCookie}`,
     },
 };
 
@@ -108,10 +108,10 @@ function GroupEpisodes(episodes) {
     let groups = {};
 
     episodes.forEach((e) => {
-        if (groups[e.show.name] != undefined) {
-            groups[e.show.name].push(e);
+        if (groups[e.show.id] != undefined) {
+            groups[e.show.id].push(e);
         } else {
-            groups[e.show.name] = [e];
+            groups[e.show.id] = [e];
         }
     });
 
