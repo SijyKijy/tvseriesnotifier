@@ -43,12 +43,14 @@ function Notify(episodes) {
             });
         }
 
+        const show = filtered[key][0].show;
+
         embeds.push({
-            title: `"**${key}**"`,
+            title: `"**${show.name}**"`,
             fields: fields,
             color: Math.floor(Math.random() * (16777215 - 1)) + 1,
             thumbnail: {
-                url: filtered[key][0].show.all_images.poster['0'],
+                url: show.all_images.poster['0'],
             },
             timestamp: new Date(Date.now()).toISOString(),
         });
