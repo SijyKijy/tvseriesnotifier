@@ -5,9 +5,9 @@ const nowDate = FormatDate(Date.now());
 const options = {
     host: 'beta-app.tvtime.com',
     path: `/sidecar?o=https%3A%2F%2Fapi2.tozelabs.com%2Fv2%2Fuser%2F34490022%2Ftocome&offset=0&include_watched=1`,
-    headers: {
-        Authorization: `Bearer ${tvtimeCookie}`,
-    },
+    //headers: {
+    //    Authorization: `Bearer ${tvtimeCookie}`,
+    //},
 };
 
 console.log("Starting notify")
@@ -21,7 +21,9 @@ https.get(options, function (res) {
 
     res.on('end', function () {
         let episodes = JSON.parse(body);
-        if (episodes.length == 0) return;
+        if (episodes.length == 0){
+            throw new Error("Episodes not found");
+        }
         Notify(episodes);
     });
 
