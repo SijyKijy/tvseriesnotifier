@@ -68,8 +68,6 @@ function Notify(episodes) {
     var webhookContent = {
         content: '',
         username: 'TV series announcer',
-        avatar_url:
-            'https://lh3.googleusercontent.com/PqZe52L8quyIlo_jLuTSfrIQwbQKBTe0tt98UWqz2yagxgDRN9AD-mWoOWmpgVH30tc',
         embeds: embeds,
     };
 
