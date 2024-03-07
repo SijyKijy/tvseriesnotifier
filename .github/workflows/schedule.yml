@@ -22,4 +22,4 @@ jobs:
               run: node index.js
               env:
                   TVTIME_COOKIE: ${{ secrets.TVTIME_COOKIE }}
-                  WEBHOOK_PATH: ${{ secrets.WEBHOOK_PATHS }} # ["123", "321"]
+                  WEBHOOK_PATHS: ${{ secrets.WEBHOOK_PATHS }} # ["123", "321"]
