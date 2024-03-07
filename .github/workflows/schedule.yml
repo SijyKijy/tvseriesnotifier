@@ -8,10 +8,18 @@ jobs:
     notifier:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v2
-            - run: npm install
+            - uses: actions/checkout@v4
+
+            - name: Use Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: '20.x'
+
+            - name: Install dependencies
+              run: npm install
+
             - name: Notify
-              uses: ./
+              run: node index.js
               env:
                   TVTIME_COOKIE: ${{ secrets.TVTIME_COOKIE }}
                   WEBHOOK_PATH: ${{ secrets.WEBHOOK_PATH }}

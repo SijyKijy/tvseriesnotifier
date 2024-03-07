@@ -10,6 +10,8 @@ const options = {
     },
 };
 
+console.log("Starting notify")
+
 https.get(options, function (res) {
     let body = '';
 
