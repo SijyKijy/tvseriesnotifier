@@ -1,6 +1,6 @@
 const https = require('https');
 
-const { TVTIME_COOKIE: tvtimeCookie, WEBHOOK_PATH: webhookPath } = process.env;
+const { TVTIME_COOKIE: tvtimeCookie, WEBHOOK_PATHS: webhookPaths } = process.env;
 const nowDate = FormatDate(Date.now());
 const options = {
     host: 'beta-app.tvtime.com',
@@ -77,28 +77,39 @@ function Notify(episodes) {
 }
 
 function PostToDiscordWebHook(content) {
-    var options = {
-        hostname: 'discord.com',
-        port: 443,
-        path: `/api/webhooks/${webhookPath}`,
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    };
+    const webHooks = JSON.parse(webhookPaths)
+    webHooks.forEach(path => {
+        let body = '';
 
-    var req = https.request(options, (res) => {
-        res.on('data', (d) => {
-            process.stdout.write(d);
+        var options = {
+            hostname: 'discord.com',
+            port: 443,
+            path: `/api/webhooks/${path}`,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+    
+        var req = https.request(options, (res) => {
+            res.on('data', (d) => {
+                body += d;
+            });
+
+            res.on('end', (d) => {
+                console.log(`Discord response status: ${res.statusCode}`);
+                if(res.statusCode >= 300)
+                    console.log(body);
+            });
+
+            req.on('error', (e) => {
+                throw new Error(`Discord error: ${e.message}`);
+            });
         });
+    
+        req.write(content);
+        req.end(); 
     });
-
-    req.on('error', (e) => {
-        throw new Error(`Discord error: ${e.message}`);
-    });
-
-    req.write(content);
-    req.end();
 }
 
 function FilterEpisodes(episodes) {
