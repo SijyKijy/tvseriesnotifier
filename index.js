@@ -43,7 +43,7 @@ function Notify(episodes) {
         let fields = [];
 
         for (value of filtered[key]) {
-            console.log(`After filter: Show: '${value.name}' | Time: ${value.air_date}`)
+            console.log(`After filter: Show: '${value.show.name}' | Time: ${value.air_date}`)
 
             fields.push({
                 name: `Episode: "${value.name}" (Episode: ${value.number} Season: ${value.season_number})`,
