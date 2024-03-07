@@ -30,12 +30,17 @@ https.get(options, function (res) {
 
 function Notify(episodes) {
     let embeds = [];
+    console.log(`Founded episodes: ${episodes.map(x => `\nShow: '${x.show.name}' | Time: ${x.air_date}`)}`)
+
     let filtered = FilterEpisodes(episodes);
 
     for (var key of Object.keys(filtered)) {
+
         let fields = [];
 
         for (value of filtered[key]) {
+            console.log(`After filter: Show: '${value.name}' | Time: ${value.air_date}`)
+
             fields.push({
                 name: `Episode: "${value.name}" (Episode: ${value.number} Season: ${value.season_number})`,
                 value: `Show time: **${value.air_time}**`,
@@ -93,7 +98,7 @@ function PostToDiscordWebHook(content) {
 }
 
 function FilterEpisodes(episodes) {
-    console.log(nowDate);
+    console.log(`NowDate: ${nowDate}`);
 
     let todayEpisodes = [];
 
