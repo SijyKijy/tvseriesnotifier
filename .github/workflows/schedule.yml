@@ -2,8 +2,17 @@ name: tv-series-notifier
 on:
     schedule:
         - cron: '00 06 * * *' # ~9:00 MSK (+03)
-    push:
-        branches: main
+    workflow_dispatch:
+        inputs:
+            date:
+                description: 'MSK date (YYYY-MM-DD) to resend notifications for, empty = today'
+                required: false
+                type: string
+            dry_run:
+                description: 'Log payloads without posting to Discord'
+                required: false
+                type: boolean
+                default: false
 jobs:
     notifier:
         runs-on: ubuntu-latest
@@ -15,11 +24,11 @@ jobs:
               with:
                 node-version: '20.x'
 
-            - name: Install dependencies
-              run: npm install
-
             - name: Notify
               run: node index.js
               env:
-                  TVTIME_COOKIE: ${{ secrets.TVTIME_COOKIE }}
-                  WEBHOOK_PATHS: ${{ secrets.WEBHOOK_PATHS }} # ["123", "321"]
+                  WEBHOOK_PATHS: ${{ secrets.WEBHOOK_PATHS }} # ["id/token", ...]
+                  TVMAZE_PROFILE: users/336089/sijykijy
+                  TVMAZE_COUNTRIES: US,GB,JP
+                  TEST_DATE: ${{ inputs.date }}
+                  DRY_RUN: ${{ inputs.dry_run && '1' || '' }}
