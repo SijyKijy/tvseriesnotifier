@@ -91,8 +91,17 @@ function formatMskTime(airstamp) {
 async function fetchFollowedShowIds(profile) {
     const showIds = new Set();
     let pagesFetched = 0;
+    let headers = {};
     for (let page = 0; page < MAX_PROFILE_PAGES; page++) {
-        const html = await fetchTvmazeText(`https://www.tvmaze.com/${profile}/followed?show-page=${page}&per-page=200`);
+        const url = `https://www.tvmaze.com/${profile}/followed?show-page=${page}&per-page=200`;
+        let html = await fetchTvmazeText(url, headers);
+        if (isBrowserCheckPage(html)) {
+            headers = { Cookie: await resolveBrowserCheckCookie(html) };
+            html = await fetchTvmazeText(url, headers);
+            if (isBrowserCheckPage(html)) {
+                throw new Error('browser check not passed for profile page');
+            }
+        }
         pagesFetched++;
         const sizeBefore = showIds.size;
         for (const match of html.matchAll(/href="\/shows\/(\d+)\//g)) {
@@ -285,20 +294,39 @@ function parseRetryAfterSeconds(responseText) {
     return 2;
 }
 
-function fetchTvmazeText(url) {
-    return fetchTvmaze(url, (response) => response.text());
+function isBrowserCheckPage(html) {
+    return html.includes('Validating your browser') || html.includes('browsercheck');
+}
+
+async function resolveBrowserCheckCookie(html) {
+    const scriptSrc = html.match(/<script src="([^"]+)"/)?.[1];
+    if (!scriptSrc) {
+        throw new Error('browser check page has no script');
+    }
+    const scriptUrl = scriptSrc.startsWith('//') ? `https:${scriptSrc}` : new URL(scriptSrc, 'https://www.tvmaze.com/').href;
+    const script = await fetchTvmazeText(scriptUrl);
+    const cookie = script.match(/document\.cookie\s*=\s*"([^=";]+=[^";]*)/)?.[1];
+    if (!cookie) {
+        throw new Error(`browser check cookie not found in ${scriptUrl}`);
+    }
+    console.log(`Browser check: cookie '${cookie.split('=')[0]}' acquired`);
+    return cookie;
+}
+
+function fetchTvmazeText(url, headers) {
+    return fetchTvmaze(url, (response) => response.text(), headers);
 }
 
 function fetchTvmazeJson(url) {
     return fetchTvmaze(url, (response) => response.json());
 }
 
-async function fetchTvmaze(url, parse) {
+async function fetchTvmaze(url, parse, headers = {}) {
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
         let response;
         try {
             response = await fetch(url, {
-                headers: { 'User-Agent': USER_AGENT },
+                headers: { 'User-Agent': USER_AGENT, ...headers },
                 signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
             });
         } catch (error) {
